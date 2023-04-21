@@ -4,6 +4,10 @@
  */
 package br.com.finfac.telas;
 
+import java.text.DateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Usuário
@@ -45,6 +49,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Finfac");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         javax.swing.GroupLayout DesktopLayout = new javax.swing.GroupLayout(Desktop);
         Desktop.setLayout(DesktopLayout);
@@ -80,11 +89,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         menCadFamiliares.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_DOWN_MASK));
         menCadFamiliares.setText("Familiares");
+        menCadFamiliares.setEnabled(false);
         menCad.add(menCadFamiliares);
 
         Menu.add(menCad);
 
         MenRel.setText("Relatorio");
+        MenRel.setEnabled(false);
 
         MenRelGastos.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_DOWN_MASK));
         MenRelGastos.setText("Gastos");
@@ -101,6 +112,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         MenAjuSob.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.ALT_DOWN_MASK));
         MenAjuSob.setText("Sobre");
+        MenAjuSob.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenAjuSobActionPerformed(evt);
+            }
+        });
         MenAju.add(MenAjuSob);
 
         Menu.add(MenAju);
@@ -109,6 +125,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         MenOpcSai.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
         MenOpcSai.setText("Sair");
+        MenOpcSai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenOpcSaiActionPerformed(evt);
+            }
+        });
         MenOpc.add(MenOpcSai);
 
         Menu.add(MenOpc);
@@ -167,6 +188,27 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_MenRelGastosActionPerformed
 
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        Date data = new Date();
+        DateFormat formatador = DateFormat.getDateInstance(DateFormat.SHORT);
+        lblData.setText(formatador.format(data));
+    }//GEN-LAST:event_formWindowActivated
+
+    private void MenOpcSaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenOpcSaiActionPerformed
+        // TODO add your handling code here:
+        int sair = JOptionPane.showConfirmDialog(null,"Tem certeza que deseja sair da aplicação ?","Atenção",JOptionPane.YES_NO_OPTION);
+        if (sair == JOptionPane.YES_OPTION){
+            System.exit(0);
+        }
+    }//GEN-LAST:event_MenOpcSaiActionPerformed
+
+    private void MenAjuSobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenAjuSobActionPerformed
+        // TODO add your handling code here:
+        TelaSobre sobre = new TelaSobre();
+        sobre.setVisible(true);
+    }//GEN-LAST:event_MenAjuSobActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -208,7 +250,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem MenAjuSob;
     private javax.swing.JMenu MenOpc;
     private javax.swing.JMenuItem MenOpcSai;
-    private javax.swing.JMenu MenRel;
+    public static javax.swing.JMenu MenRel;
     private javax.swing.JMenuItem MenRelGastos;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JLabel jLabel2;
@@ -216,7 +258,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblUsuario1;
     private javax.swing.JMenu menCad;
     private javax.swing.JMenuItem menCadEvento;
-    private javax.swing.JMenuItem menCadFamiliares;
+    public static javax.swing.JMenuItem menCadFamiliares;
     private javax.swing.JMenuItem menCadGastos;
     // End of variables declaration//GEN-END:variables
 }
