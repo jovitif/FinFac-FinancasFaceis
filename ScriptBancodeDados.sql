@@ -15,6 +15,11 @@ create table tbusuarios(
     login varchar(15) not null unique,
     senha varchar(15) not null
 );
+select * from tbusuarios;
+alter table tbusuarios add column perfil varchar(20) not null;
+
+update tbusuarios set perfil='admin' where iduser =2;
+update tbusuarios set perfil='admin' where iduser =1;
 
 ALTER TABLE tbusuarios DROP idade;
 ALTER TABLE tbusuarios ADD photo longblob;
@@ -23,6 +28,7 @@ describe tbusuarios;
 
 insert into tbusuarios(nome, email,login,senha) values ("João Vitor Fernandes de Sales","joaosales911@gmail.com","joaosales","joaosales1234");
 insert into tbusuarios(nome, email, login, senha) values ("Administrador","admin@gmail.com","admin","admin");
+insert into tbusuarios(nome, email, login, senha, perfil) values ("Pessoa 01","pessoa01@gmail.com","pessoa01","pessoa01","user");
 select * from tbusuarios;
 
 delete from tbusuarios where login = "joaosales";
