@@ -17,7 +17,6 @@ create table tbusuarios(
 );
 select * from tbusuarios;
 alter table tbusuarios add column perfil varchar(20) not null;
-
 update tbusuarios set perfil='admin' where iduser =2;
 update tbusuarios set perfil='admin' where iduser =1;
 
@@ -52,7 +51,9 @@ ALTER TABLE tbeventos MODIFY idevento int auto_increment;
 alter table tbeventos change local localevento varchar(100);
 alter table tbeventos change data dataevento date;
 describe tbeventos;
+select * from tbeventos;
 
+#select idevento as Id, descricao as Descricao, dataevento as Data
 
 INSERT INTO tbeventos (descricao, data, horario, local, validado)  VALUES ('Passear com o cachorro', '2023-04-15', '15:30:00', 'Bosque da UFERSA', true);
 insert into tbeventos (descricao, dataevento, horario, localevento, categoria, validado) Values ('Ida ao shopping com a cremosa','2023-04-14','17:44:00','Partagem Shopping Mossoró','Passeio',true);
