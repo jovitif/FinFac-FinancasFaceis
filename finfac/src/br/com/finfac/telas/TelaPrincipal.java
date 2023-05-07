@@ -47,6 +47,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         MenAjuSob = new javax.swing.JMenuItem();
         MenOpc = new javax.swing.JMenu();
         MenOpcSai = new javax.swing.JMenuItem();
+        MenOpcPerfil = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Finfac");
@@ -146,6 +147,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         MenOpc.add(MenOpcSai);
 
+        MenOpcPerfil.setText("Perfil");
+        MenOpcPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenOpcPerfilActionPerformed(evt);
+            }
+        });
+        MenOpc.add(MenOpcPerfil);
+
         Menu.add(MenOpc);
 
         setJMenuBar(Menu);
@@ -181,8 +190,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menCadEventoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCadEventoActionPerformed
+
         TelaEvento evento = new TelaEvento();
+        
+        System.out.println("Tela de Eventos");
         evento.setVisible(true);
+        Desktop.removeAll();
         Desktop.add(evento);
         // TODO add your handling code here:
     }//GEN-LAST:event_menCadEventoActionPerformed
@@ -215,16 +228,24 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void menCadFamiliaresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCadFamiliaresActionPerformed
         // TODO add your handling code here:
         TelaUsuario usuario = new TelaUsuario();
+        System.out.println("Tela de Familiares");
         usuario.setVisible(true);
+        Desktop.removeAll();
         Desktop.add(usuario);
     }//GEN-LAST:event_menCadFamiliaresActionPerformed
 
     private void menCadGastosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCadGastosActionPerformed
         // TODO add your handling code here:
         TelaGastos telagastos = new TelaGastos();
+        System.out.println("Tela de Gastos");
         telagastos.setVisible(true);
+        Desktop.removeAll();
         Desktop.add(telagastos);
     }//GEN-LAST:event_menCadGastosActionPerformed
+
+    private void MenOpcPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenOpcPerfilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MenOpcPerfilActionPerformed
 
     /**
      * @param args the command line arguments
@@ -266,6 +287,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu MenAju;
     private javax.swing.JMenuItem MenAjuSob;
     private javax.swing.JMenu MenOpc;
+    private javax.swing.JMenuItem MenOpcPerfil;
     private javax.swing.JMenuItem MenOpcSai;
     public static javax.swing.JMenu MenRel;
     private javax.swing.JMenuItem MenRelGastos;

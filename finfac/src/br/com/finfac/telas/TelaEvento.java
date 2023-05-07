@@ -6,7 +6,7 @@ package br.com.finfac.telas;
 
 import java.sql.*;
 import br.com.finfac.dao.ModuloConexao;
-import java.text.SimpleDateFormat;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
@@ -23,20 +23,23 @@ public class TelaEvento extends javax.swing.JInternalFrame {
     /**
      * Creates new form TelaEvento
      */
-    public TelaEvento() {
+    public TelaEvento() { 
+        getContentPane().setBackground(Color.WHITE);
         initComponents();
         conexao = ModuloConexao.conectar();
+        pesquisar_evento();
     }
     
       private void adicionar(){
-        String sql = "insert into tbeventos (descricao,dataevento,horario,localevento,categoria) values(?,?,?,?,?)";
+        String sql = "insert into tbeventos (descricao,dataevento,horario,localevento,validado,categoria) values(?,?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtEventDescricao.getText());
-            pst.setString(2, txtEventId.getText());
+            pst.setString(2, txtEventData.getText());
            pst.setString(3, txtEventHorario.getText());
            pst.setString(4, txtEventLocal.getText());
-pst.setString(5, cboEventCategoria.getSelectedItem().toString());
+           pst.setString(5, cboEventValidado.getSelectedItem().toString());
+           pst.setString(6, cboEventCategoria.getSelectedItem().toString());
 
            if((txtEventDescricao.getText().isEmpty()) || (txtEventHorario.getText().isEmpty())){
                JOptionPane.showMessageDialog(null,"Preencha todos os campos");
@@ -68,58 +71,61 @@ pst.setString(5, cboEventCategoria.getSelectedItem().toString());
    
    public void setar_campos(){
        int setar = tblEventos.getSelectedRow();
-              txtEventId.setText(tblEventos.getModel().getValueAt(setar,0).toString());
+       txtEventId.setText(tblEventos.getModel().getValueAt(setar,0).toString());
        txtEventDescricao.setText(tblEventos.getModel().getValueAt(setar,1).toString());
-       txtEventId.setText(tblEventos.getModel().getValueAt(setar,2).toString());
+       txtEventData.setText(tblEventos.getModel().getValueAt(setar,2).toString());
        txtEventHorario.setText(tblEventos.getModel().getValueAt(setar,3).toString());
        txtEventLocal.setText(tblEventos.getModel().getValueAt(setar,4).toString());
-       // Obtém o valor para o JComboBox cboEventValidado
-String valorValidado = tblEventos.getModel().getValueAt(setar, 5).toString();
-cboEventValidado.setSelectedItem(valorValidado);
-
-// Obtém o valor para o JComboBox cboEventCategoria
-String valorCategoria = tblEventos.getModel().getValueAt(setar, 6).toString();
-cboEventCategoria.setSelectedItem(valorCategoria);
+        cboEventValidado.setSelectedItem(tblEventos.getModel().getValueAt(setar, 5));
+        cboEventCategoria.setSelectedItem(tblEventos.getValueAt(setar, 6));
+        
 btnAdicionar.setEnabled(false);
+btnAlterar.setEnabled(true);
+btnRemover.setEnabled(true);
    }
    
    private void alterar(){
-        String sql = "update tbeventos set descricao=?,dataevento=?,horario=?,localevento=?,validado=?,categoria=? where idevento=?";
+       int confirma = JOptionPane.showConfirmDialog(null, "Confirma as alterações nos dados deste evento ?","Atenção!",JOptionPane.YES_NO_OPTION);
+       if(confirma == JOptionPane.YES_OPTION){
+                   String sql = "update tbeventos set descricao=?,dataevento=?,horario=?,localevento=?,validado=?,categoria=? where descricao=?";
         try {        
            pst = conexao.prepareStatement(sql);
            pst.setString(1, txtEventDescricao.getText());
-           pst.setString(2, txtEventId.getText());
+           pst.setString(2, txtEventData.getText());
            pst.setString(3, txtEventHorario.getText());
            pst.setString(4, txtEventLocal.getText());
            pst.setString(5, cboEventValidado.getSelectedItem().toString());
            pst.setString(6, cboEventCategoria.getSelectedItem().toString());
-           pst.setString(7, txtEventId.getText());
+           pst.setString(7, txtEventDescricao.getText());
         
            if((txtEventDescricao.getText().isEmpty()) || (txtEventHorario.getText().isEmpty())){
                JOptionPane.showMessageDialog(null,"Preencha todos os campos obrigatorios");
            } else{
             int adicionado = pst.executeUpdate();
             if(adicionado > 0){
-                JOptionPane.showMessageDialog(null,"Usuario alterado com sucesso");
+                JOptionPane.showMessageDialog(null,"Evento alterado com sucesso");
                  limpar();
             }
            }
         } catch (Exception e) {
          JOptionPane.showMessageDialog(null,e);
-        }
+        }   
+       }
+        
     }
 
     private void remover(){
         int confirma = JOptionPane.showConfirmDialog(null, "tem certeza que deseja remover este evento ?", "Atenção",JOptionPane.YES_NO_OPTION);
         if (confirma == JOptionPane.YES_OPTION){
-            String sql = "delete from tbeventos where idevento=?";
+            String sql = "delete from tbeventos where descricao=?";
             try{
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtEventId.getText());
+            pst.setString(1, txtEventDescricao.getText());
            int apagado = pst.executeUpdate();
            if(apagado > 0){
-               JOptionPane.showMessageDialog(null, "Evento Removido com sucesso");
                limpar();
+               JOptionPane.showMessageDialog(null, "Evento Removido com sucesso");
+               
                btnAdicionar.setEnabled(true);
            }
             }catch(Exception e){
@@ -134,6 +140,7 @@ btnAdicionar.setEnabled(false);
                   txtEventId.setText(null);
                 txtEventHorario.setText(null);
                 txtEventLocal.setText(null);
+                txtEventData.setText(null);
                 ((DefaultTableModel) tblEventos.getModel()).setRowCount(0);
     }
     
@@ -167,21 +174,27 @@ btnAdicionar.setEnabled(false);
         jScrollPane2 = new javax.swing.JScrollPane();
         tblEventos = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
-        txtEventData1 = new javax.swing.JTextField();
+        txtEventData = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
         setTitle("Eventos");
         setPreferredSize(new java.awt.Dimension(567, 514));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Descrição:");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 100, -1, -1));
 
         jLabel2.setText("Data:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 180, -1, -1));
 
         txtEventDescricao.setColumns(20);
         txtEventDescricao.setRows(5);
         jScrollPane1.setViewportView(txtEventDescricao);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 100, 446, 44));
 
         txtEventId.setEnabled(false);
         txtEventId.addActionListener(new java.awt.event.ActionListener() {
@@ -189,52 +202,74 @@ btnAdicionar.setEnabled(false);
                 txtEventIdActionPerformed(evt);
             }
         });
+        getContentPane().add(txtEventId, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 60, 122, 20));
 
         jLabel3.setText("Horario:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 240, -1, -1));
+        getContentPane().add(txtEventHorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 240, 127, -1));
 
         jLabel4.setText("Local:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 300, -1, -1));
+        getContentPane().add(txtEventLocal, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 300, 127, -1));
 
         jLabel5.setText("Validado");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 180, -1, -1));
 
-        cboEventValidado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sim", "Não" }));
+        cboEventValidado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Em Obsevação", "Aprovado", "Recusado" }));
         cboEventValidado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboEventValidadoActionPerformed(evt);
             }
         });
+        getContentPane().add(cboEventValidado, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 180, -1, -1));
 
         jLabel6.setText("Categoria");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 240, -1, -1));
 
-        cboEventCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboEventCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Outros", "Alimentação", "Transporte", "Moradia", "Educação", "Lazer", "Compras" }));
+        getContentPane().add(cboEventCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 240, -1, -1));
 
         btnAdicionar.setText("Adicionar");
+        btnAdicionar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdicionarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnAdicionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 420, -1, -1));
 
         btnAlterar.setText("Alterar");
+        btnAlterar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAlterarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnAlterar, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 420, -1, -1));
 
         btnRemover.setText("Remover");
+        btnRemover.setPreferredSize(new java.awt.Dimension(80, 80));
         btnRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoverActionPerformed(evt);
             }
         });
+        getContentPane().add(btnRemover, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 420, -1, -1));
 
+        txtEventPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEventPesquisarActionPerformed(evt);
+            }
+        });
         txtEventPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtEventPesquisarKeyReleased(evt);
             }
         });
+        getContentPane().add(txtEventPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 20, 280, -1));
 
         jLabel7.setText("Pesquisar");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
 
         tblEventos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -254,117 +289,21 @@ btnAdicionar.setEnabled(false);
         });
         jScrollPane2.setViewportView(tblEventos);
 
-        jLabel8.setText("Id Evento");
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 520, 440));
 
-        txtEventData1.addActionListener(new java.awt.event.ActionListener() {
+        jLabel8.setText("Id Evento");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 60, -1, -1));
+
+        txtEventData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEventData1ActionPerformed(evt);
+                txtEventDataActionPerformed(evt);
             }
         });
+        getContentPane().add(txtEventData, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 180, 122, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(61, 61, 61)
-                                .addComponent(btnAdicionar)
-                                .addGap(50, 50, 50)
-                                .addComponent(btnAlterar)
-                                .addGap(84, 84, 84)
-                                .addComponent(btnRemover))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(txtEventPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(jLabel8))
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(txtEventHorario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
-                                            .addComponent(txtEventLocal, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addGap(141, 141, 141)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel6)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(cboEventCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(cboEventValidado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addComponent(txtEventId, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 543, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
-                .addContainerGap())
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(83, 83, 83)
-                    .addComponent(txtEventData1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(857, Short.MAX_VALUE)))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtEventPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addGap(15, 15, 15)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(txtEventId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(21, 21, 21)
-                .addComponent(jLabel2)
-                .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtEventHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(cboEventValidado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtEventLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(cboEventCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(57, 57, 57)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAlterar)
-                    .addComponent(btnRemover)
-                    .addComponent(btnAdicionar))
-                .addGap(37, 37, 37))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(287, Short.MAX_VALUE)
-                    .addComponent(txtEventData1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(215, 215, 215)))
-        );
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setText("*Campo Obrigatorio");
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 20, -1, -1));
 
         setBounds(0, 0, 1074, 560);
     }// </editor-fold>//GEN-END:initComponents
@@ -397,13 +336,17 @@ adicionar();
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAlterarActionPerformed
 
-    private void txtEventData1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEventData1ActionPerformed
+    private void txtEventDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEventDataActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtEventData1ActionPerformed
+    }//GEN-LAST:event_txtEventDataActionPerformed
 
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
         remover();
     }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void txtEventPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEventPesquisarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEventPesquisarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -411,8 +354,9 @@ adicionar();
     private javax.swing.JButton btnAlterar;
     private javax.swing.JButton btnRemover;
     private javax.swing.JComboBox<String> cboEventCategoria;
-    private javax.swing.JComboBox<String> cboEventValidado;
+    public static javax.swing.JComboBox<String> cboEventValidado;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -423,7 +367,7 @@ adicionar();
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblEventos;
-    private javax.swing.JTextField txtEventData1;
+    private javax.swing.JTextField txtEventData;
     private javax.swing.JTextArea txtEventDescricao;
     private javax.swing.JTextField txtEventHorario;
     private javax.swing.JTextField txtEventId;

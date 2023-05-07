@@ -22,13 +22,14 @@ update tbusuarios set perfil='admin' where iduser =1;
 
 ALTER TABLE tbusuarios DROP idade;
 ALTER TABLE tbusuarios ADD photo longblob;
-
+ALTER TABLE tbusuarios MODIFY COLUMN senha  varchar(15) not null;
 describe tbusuarios;
 
 insert into tbusuarios(nome, email,login,senha) values ("João Vitor Fernandes de Sales","joaosales911@gmail.com","joaosales","joaosales1234");
 insert into tbusuarios(nome, email, login, senha) values ("Administrador","admin@gmail.com","admin","admin");
 insert into tbusuarios(nome, email, login, senha, perfil) values ("Pessoa 01","pessoa01@gmail.com","pessoa01","pessoa01","user");
 select * from tbusuarios;
+
 
 delete from tbusuarios where login = "joaosales";
 
@@ -44,11 +45,26 @@ CREATE TABLE tbeventos (
   local VARCHAR(100) NOT NULL,
   validado BOOLEAN
 );
+
+describe tbeventos;
+
+alter table tbeventos drop  situacao;
 alter table tbeventos add  categoria varchar(50);
 ALTER TABLE tbeventos CHANGE id idevento INT;
 ALTER TABLE tbeventos MODIFY idevento int auto_increment;
 
+describe tbgastosevento;
+select * from tbgastosevento;
+
+alter table tbgastosevento add  situacao varchar(50);
+alter table tbgastosevento modify datagasto varchar(50);
+alter table tbgastosevento modify horagasto varchar(50);
+
+
 alter table tbeventos change local localevento varchar(100);
+ALTER TABLE tbeventos MODIFY validado VARCHAR(50);
+ALTER TABLE tbeventos MODIFY dataevento VARCHAR(50);
+ALTER TABLE tbeventos MODIFY horario VARCHAR(50);
 alter table tbeventos change data dataevento date;
 describe tbeventos;
 select * from tbeventos;
@@ -60,6 +76,8 @@ insert into tbeventos (descricao, dataevento, horario, localevento, categoria, v
 SET SQL_SAFE_UPDATES = 1;
 
 UPDATE tbeventos SET descricao = 'realizar as atividades referentes a disciplina de APOO', localevento = 'minha casa' WHERE dataevento = '2023-04-15';
+
+
 
 select * from tbeventos;
 
