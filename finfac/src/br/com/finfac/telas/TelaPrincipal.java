@@ -12,16 +12,26 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Usuário
+ * @author João Sales
  */
 public class TelaPrincipal extends javax.swing.JFrame {
+
+    private static String perfil;
 
     /**
      * Creates new form TelaPrincipal
      */
-    public TelaPrincipal() {
+    public TelaPrincipal(String perfil) {
+        this.perfil = perfil;
         getContentPane().setBackground(Color.WHITE);
         initComponents();
+        TelaPerfil telaperfil = new TelaPerfil();
+        if (perfil.equals("admin")) {
+
+            telaperfil.setVisible(true);
+            Desktop.add(telaperfil);
+        }
+
     }
 
     /**
@@ -35,14 +45,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         Desktop = new javax.swing.JDesktopPane();
         lblData = new javax.swing.JLabel();
-        lblUsuario = new javax.swing.JLabel();
+        lblUsuario2 = new javax.swing.JLabel();
         Menu = new javax.swing.JMenuBar();
         menCad = new javax.swing.JMenu();
         menCadEvento = new javax.swing.JMenuItem();
         menCadGastos = new javax.swing.JMenuItem();
         menCadFamiliares = new javax.swing.JMenuItem();
-        MenRel = new javax.swing.JMenu();
-        MenRelGastos = new javax.swing.JMenuItem();
         MenAju = new javax.swing.JMenu();
         MenAjuSob = new javax.swing.JMenuItem();
         MenOpc = new javax.swing.JMenu();
@@ -59,6 +67,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 formWindowActivated(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        Desktop.setPreferredSize(new java.awt.Dimension(1074, 560));
 
         javax.swing.GroupLayout DesktopLayout = new javax.swing.GroupLayout(Desktop);
         Desktop.setLayout(DesktopLayout);
@@ -71,11 +82,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
             .addGap(0, 560, Short.MAX_VALUE)
         );
 
+        getContentPane().add(Desktop, new org.netbeans.lib.awtextra.AbsoluteConstraints(29, 42, -1, -1));
+
         lblData.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         lblData.setText("Data");
+        getContentPane().add(lblData, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 10, -1, -1));
 
-        lblUsuario.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        lblUsuario.setText("Usuario");
+        lblUsuario2.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        lblUsuario2.setText("Usuario");
+        getContentPane().add(lblUsuario2, new org.netbeans.lib.awtextra.AbsoluteConstraints(29, 8, -1, -1));
 
         menCad.setText("Cadastro");
 
@@ -108,20 +123,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         menCad.add(menCadFamiliares);
 
         Menu.add(menCad);
-
-        MenRel.setText("Relatorio");
-        MenRel.setEnabled(false);
-
-        MenRelGastos.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_DOWN_MASK));
-        MenRelGastos.setText("Gastos");
-        MenRelGastos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenRelGastosActionPerformed(evt);
-            }
-        });
-        MenRel.add(MenRelGastos);
-
-        Menu.add(MenRel);
 
         MenAju.setText("Ajuda");
 
@@ -159,32 +160,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         setJMenuBar(Menu);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblUsuario)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblData))
-                    .addComponent(Desktop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblUsuario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Desktop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(54, Short.MAX_VALUE))
-        );
-
         setSize(new java.awt.Dimension(1152, 687));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
@@ -192,29 +167,28 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void menCadEventoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menCadEventoActionPerformed
 
         TelaEvento evento = new TelaEvento();
-        
+
         System.out.println("Tela de Eventos");
+        if (!perfil.equals("admin")) {
+            evento.cboEventValidado.setEnabled(false);
+        }
         evento.setVisible(true);
         Desktop.removeAll();
         Desktop.add(evento);
         // TODO add your handling code here:
     }//GEN-LAST:event_menCadEventoActionPerformed
 
-    private void MenRelGastosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenRelGastosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_MenRelGastosActionPerformed
-
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
         Date data = new Date();
-       DateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         lblData.setText(formatador.format(data));
     }//GEN-LAST:event_formWindowActivated
 
     private void MenOpcSaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenOpcSaiActionPerformed
         // TODO add your handling code here:
-        int sair = JOptionPane.showConfirmDialog(null,"Tem certeza que deseja sair da aplicação ?","Atenção",JOptionPane.YES_NO_OPTION);
-        if (sair == JOptionPane.YES_OPTION){
+        int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair da aplicação ?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (sair == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }//GEN-LAST:event_MenOpcSaiActionPerformed
@@ -238,6 +212,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         TelaGastos telagastos = new TelaGastos();
         System.out.println("Tela de Gastos");
+        if (!perfil.equals("admin")) {
+            telagastos.cboSituacao.setEnabled(false);
+        }
         telagastos.setVisible(true);
         Desktop.removeAll();
         Desktop.add(telagastos);
@@ -245,6 +222,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void MenOpcPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenOpcPerfilActionPerformed
         // TODO add your handling code here:
+        TelaPerfil telaperfil = new TelaPerfil();
+        if (perfil.equals("admin")) {
+            telaperfil.setVisible(true);
+        } else {
+            telaperfil.setVisible(false);
+        }
+        Desktop.removeAll();
+        Desktop.add(telaperfil);
     }//GEN-LAST:event_MenOpcPerfilActionPerformed
 
     /**
@@ -277,7 +262,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaPrincipal().setVisible(true);
+                new TelaPrincipal(perfil).setVisible(true);
             }
         });
     }
@@ -289,11 +274,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu MenOpc;
     private javax.swing.JMenuItem MenOpcPerfil;
     private javax.swing.JMenuItem MenOpcSai;
-    public static javax.swing.JMenu MenRel;
-    private javax.swing.JMenuItem MenRelGastos;
     private javax.swing.JMenuBar Menu;
     private javax.swing.JLabel lblData;
-    public static javax.swing.JLabel lblUsuario;
+    public static javax.swing.JLabel lblUsuario2;
     private javax.swing.JMenu menCad;
     private javax.swing.JMenuItem menCadEvento;
     public static javax.swing.JMenuItem menCadFamiliares;

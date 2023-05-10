@@ -10,13 +10,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.*;
 import br.com.finfac.dao.ModuloConexao;
+import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
 /**
  *
- * @author Usuário
+ * @author João Sales
  */
 public class TelaGastos extends javax.swing.JInternalFrame {
 
@@ -41,7 +42,7 @@ public class TelaGastos extends javax.swing.JInternalFrame {
             pst.setString(1, "%" + txtEvento.getText() + "%");
             rs = pst.executeQuery();
             tblEventos.setModel(DbUtils.resultSetToTableModel(rs));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
 
@@ -71,12 +72,12 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                 int adicionado = pst.executeUpdate();
                 if (adicionado > 0) {
                     JOptionPane.showMessageDialog(null, "Gasto adicionado com sucesso");
-                    btnAdicionar.setEnabled(false);
-                    btnPesquisar.setEnabled(false);
-                    btnImprimir.setEnabled(true);
+                    //    btnAdicionar.setEnabled(false);
+                    //     btnPesquisar.setEnabled(false);
+                    limpar();
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
@@ -99,7 +100,6 @@ public class TelaGastos extends javax.swing.JInternalFrame {
         tblEventos.setEnabled(true);
         btnEditar.setEnabled(false);
         btnDeletar.setEnabled(false);
-        btnImprimir.setEnabled(false);
     }
 
     private void pesquisar() {
@@ -127,7 +127,6 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                 tblEventos.setVisible(false);
                 btnEditar.setEnabled(true);
                 btnDeletar.setEnabled(true);
-                btnImprimir.setEnabled(true);
 
             } else {
                 JOptionPane.showMessageDialog(null, "Gasto não cadastrado");
@@ -135,8 +134,8 @@ public class TelaGastos extends javax.swing.JInternalFrame {
         } catch (SQLSyntaxErrorException e) {
             JOptionPane.showMessageDialog(null, "Gasto invalido");
             System.out.println(e);
-        } catch (Exception e2) {
-            JOptionPane.showMessageDialog(null, e2);
+        } catch (HeadlessException | SQLException error) {
+            JOptionPane.showMessageDialog(null, error);
         }
     }
 
@@ -155,7 +154,7 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                 pst.setString(7, txtObservacoes.getText());
                 pst.setString(8, cboSituacao.getSelectedItem().toString());
                 pst.setString(9, txtGasto.getText());
-                if ((txtId.getText().isEmpty()) || (txtValor.getText().isEmpty())  || cboCategoria.getSelectedItem().equals(" ") || cboMeio.getSelectedItem().equals(" ")) {
+                if ((txtId.getText().isEmpty()) || (txtValor.getText().isEmpty()) || cboCategoria.getSelectedItem().equals(" ") || cboMeio.getSelectedItem().equals(" ")) {
                     JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios");
                 } else {
                     int adicionado = pst.executeUpdate();
@@ -165,7 +164,7 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                         limpar();
                     }
                 }
-            } catch (Exception e) {
+            } catch (HeadlessException | SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
@@ -183,7 +182,7 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(null, "Gasto excluido com sucesso");
                     limpar();
                 }
-            } catch (Exception e) {
+            } catch (HeadlessException | SQLException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
         }
@@ -198,7 +197,6 @@ public class TelaGastos extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel3 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -218,7 +216,6 @@ public class TelaGastos extends javax.swing.JInternalFrame {
         txtId = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEventos = new javax.swing.JTable();
-        btnImprimir = new javax.swing.JButton();
         btnAdicionar = new javax.swing.JButton();
         btnPesquisar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
@@ -258,6 +255,12 @@ public class TelaGastos extends javax.swing.JInternalFrame {
             }
         });
 
+        txtHorario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHorarioActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Data");
 
         jLabel4.setText("Horario");
@@ -286,34 +289,33 @@ public class TelaGastos extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(cboSituacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(166, 166, 166)
-                                .addComponent(jLabel4)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtGasto, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDataCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(41, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(73, 73, 73)
-                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(252, Short.MAX_VALUE)))
+                                .addComponent(txtGasto, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboSituacao, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtDataCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(34, 34, 34)
+                        .addComponent(txtHorario)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -326,24 +328,20 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(txtGasto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
                     .addComponent(txtHorario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(cboSituacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(39, 39, 39))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(64, 64, 64)
-                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(88, Short.MAX_VALUE)))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 460, 180));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 470, 180));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Evento"));
 
@@ -381,14 +379,14 @@ public class TelaGastos extends javax.swing.JInternalFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(txtEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(107, 107, 107)
                         .addComponent(jLabel6)
                         .addGap(18, 18, 18)
-                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtId)))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -404,32 +402,30 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 20, 500, 250));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 10, 500, 260));
 
-        btnImprimir.setText("Imprimir");
-        btnImprimir.setEnabled(false);
-        btnImprimir.setPreferredSize(new java.awt.Dimension(80, 80));
-        getContentPane().add(btnImprimir, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 420, -1, -1));
-
-        btnAdicionar.setText("Adicionar");
+        btnAdicionar.setBackground(new java.awt.Color(78, 92, 188));
+        btnAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/add.png"))); // NOI18N
         btnAdicionar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdicionarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAdicionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 420, -1, -1));
+        getContentPane().add(btnAdicionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 420, -1, -1));
 
-        btnPesquisar.setText("Pesquisar");
+        btnPesquisar.setBackground(new java.awt.Color(78, 92, 188));
+        btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/search.png"))); // NOI18N
         btnPesquisar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPesquisarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 420, -1, -1));
+        getContentPane().add(btnPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 420, -1, -1));
 
-        btnEditar.setText("Editar");
+        btnEditar.setBackground(new java.awt.Color(78, 92, 188));
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/editar.png"))); // NOI18N
         btnEditar.setEnabled(false);
         btnEditar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -437,9 +433,10 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                 btnEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 420, -1, -1));
+        getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 420, -1, -1));
 
-        btnDeletar.setText("Deletar");
+        btnDeletar.setForeground(new java.awt.Color(78, 92, 188));
+        btnDeletar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/trash.png"))); // NOI18N
         btnDeletar.setEnabled(false);
         btnDeletar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnDeletar.addActionListener(new java.awt.event.ActionListener() {
@@ -447,19 +444,19 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                 btnDeletarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnDeletar, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 420, -1, -1));
+        getContentPane().add(btnDeletar, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 420, -1, -1));
 
         jLabel7.setText("Meio de Pagamento");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 350, -1, -1));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, -1, -1));
 
         txtObservacoes.setColumns(20);
         txtObservacoes.setRows(5);
         jScrollPane2.setViewportView(txtObservacoes);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 290, 300, -1));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 300, 490, 100));
 
         jLabel8.setText("Observações");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 300, -1, -1));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 280, -1, -1));
 
         cboMeio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Dinheiro", "Cartão de crédito", "Cartão de débito", "Transferência bancária", "Boleto bancário", "Cheque", "Pix", "PayPal", "PicPay", "Mercado Pago", "Outro " }));
         cboMeio.addActionListener(new java.awt.event.ActionListener() {
@@ -467,28 +464,28 @@ public class TelaGastos extends javax.swing.JInternalFrame {
                 cboMeioActionPerformed(evt);
             }
         });
-        getContentPane().add(cboMeio, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 350, -1, -1));
+        getContentPane().add(cboMeio, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 240, 130, -1));
 
         jLabel9.setText("Categoria");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, -1, -1));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, -1, -1));
 
-        txtValor.setText("0");
-        getContentPane().add(txtValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 390, 100, -1));
+        txtValor.setText("0.0");
+        getContentPane().add(txtValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 270, 130, -1));
 
         jLabel10.setText("Valor");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 390, -1, -1));
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 270, -1, -1));
 
         cboCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Alimentação", "Transporte", "Habitação", "Educação", "Saúde", "Lazer", "Vestuário", "Eletrônicos", "Utilidades domésticas", "Impostos e taxas", "Presentes", "Outros" }));
-        getContentPane().add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 350, -1, -1));
+        getContentPane().add(cboCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, -1, -1));
 
         jLabel11.setText("Descrição");
-        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, -1, -1));
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, -1, -1));
 
         txtDescricao.setColumns(20);
         txtDescricao.setRows(5);
         jScrollPane3.setViewportView(txtDescricao);
 
-        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, 300, -1));
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 296, 460, 100));
 
         setBounds(0, 0, 1074, 560);
     }// </editor-fold>//GEN-END:initComponents
@@ -538,17 +535,19 @@ public class TelaGastos extends javax.swing.JInternalFrame {
         excluir();
     }//GEN-LAST:event_btnDeletarActionPerformed
 
+    private void txtHorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHorarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHorarioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnDeletar;
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnPesquisar;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cboCategoria;
     private javax.swing.JComboBox<String> cboMeio;
-    private javax.swing.JComboBox<String> cboSituacao;
+    public static javax.swing.JComboBox<String> cboSituacao;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

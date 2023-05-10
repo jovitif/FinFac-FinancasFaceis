@@ -11,139 +11,143 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
 
-
 /**
  *
- * @author Usuário
+ * @author João Sales
  */
 public class TelaEvento extends javax.swing.JInternalFrame {
+
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
+
     /**
      * Creates new form TelaEvento
      */
-    public TelaEvento() { 
+    public TelaEvento() {
         getContentPane().setBackground(Color.WHITE);
         initComponents();
         conexao = ModuloConexao.conectar();
         pesquisar_evento();
     }
-    
-      private void adicionar(){
+
+    private void adicionar() {
         String sql = "insert into tbeventos (descricao,dataevento,horario,localevento,validado,categoria) values(?,?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtEventDescricao.getText());
             pst.setString(2, txtEventData.getText());
-           pst.setString(3, txtEventHorario.getText());
-           pst.setString(4, txtEventLocal.getText());
-           pst.setString(5, cboEventValidado.getSelectedItem().toString());
-           pst.setString(6, cboEventCategoria.getSelectedItem().toString());
+            pst.setString(3, txtEventHorario.getText());
+            pst.setString(4, txtEventLocal.getText());
+            pst.setString(5, cboEventValidado.getSelectedItem().toString());
+            pst.setString(6, cboEventCategoria.getSelectedItem().toString());
 
-           if((txtEventDescricao.getText().isEmpty()) || (txtEventHorario.getText().isEmpty())){
-               JOptionPane.showMessageDialog(null,"Preencha todos os campos");
-           } else{
-            
-            int adicionado = pst.executeUpdate();
-            System.out.println(adicionado);
-            if(adicionado > 0){
-                JOptionPane.showMessageDialog(null,"Evento adicionado com sucesso");
-                 limpar();
+            if ((txtEventDescricao.getText().isEmpty()) || (txtEventHorario.getText().isEmpty())) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos");
+            } else {
+
+                int adicionado = pst.executeUpdate();
+                System.out.println(adicionado);
+                if (adicionado > 0) {
+                    JOptionPane.showMessageDialog(null, "Evento adicionado com sucesso");
+                    limpar();
+                }
             }
-           }
         } catch (Exception e) {
-           JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, e);
         }
     }
-      
-   private void pesquisar_evento(){
-    String sql = "SELECT * FROM tbeventos WHERE descricao LIKE ?";
-    try {
-        pst = conexao.prepareStatement(sql);
-        pst.setString(1, "%" + txtEventPesquisar.getText() + "%");
-        rs = pst.executeQuery();
-        tblEventos.setModel(DbUtils.resultSetToTableModel(rs));
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, e);
+
+    private void pesquisar_evento() {
+        String sql = "SELECT * FROM tbeventos WHERE descricao LIKE ?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, "%" + txtEventPesquisar.getText() + "%");
+            rs = pst.executeQuery();
+            tblEventos.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
-}
-   
-   public void setar_campos(){
-       int setar = tblEventos.getSelectedRow();
-       txtEventId.setText(tblEventos.getModel().getValueAt(setar,0).toString());
-       txtEventDescricao.setText(tblEventos.getModel().getValueAt(setar,1).toString());
-       txtEventData.setText(tblEventos.getModel().getValueAt(setar,2).toString());
-       txtEventHorario.setText(tblEventos.getModel().getValueAt(setar,3).toString());
-       txtEventLocal.setText(tblEventos.getModel().getValueAt(setar,4).toString());
+
+    public void setar_campos() {
+        int setar = tblEventos.getSelectedRow();
+        txtEventId.setText(tblEventos.getModel().getValueAt(setar, 0).toString());
+        txtEventDescricao.setText(tblEventos.getModel().getValueAt(setar, 1).toString());
+        txtEventData.setText(tblEventos.getModel().getValueAt(setar, 2).toString());
+        txtEventHorario.setText(tblEventos.getModel().getValueAt(setar, 3).toString());
+        txtEventLocal.setText(tblEventos.getModel().getValueAt(setar, 4).toString());
         cboEventValidado.setSelectedItem(tblEventos.getModel().getValueAt(setar, 5));
         cboEventCategoria.setSelectedItem(tblEventos.getValueAt(setar, 6));
-        
-btnAdicionar.setEnabled(false);
-btnAlterar.setEnabled(true);
-btnRemover.setEnabled(true);
-   }
-   
-   private void alterar(){
-       int confirma = JOptionPane.showConfirmDialog(null, "Confirma as alterações nos dados deste evento ?","Atenção!",JOptionPane.YES_NO_OPTION);
-       if(confirma == JOptionPane.YES_OPTION){
-                   String sql = "update tbeventos set descricao=?,dataevento=?,horario=?,localevento=?,validado=?,categoria=? where descricao=?";
-        try {        
-           pst = conexao.prepareStatement(sql);
-           pst.setString(1, txtEventDescricao.getText());
-           pst.setString(2, txtEventData.getText());
-           pst.setString(3, txtEventHorario.getText());
-           pst.setString(4, txtEventLocal.getText());
-           pst.setString(5, cboEventValidado.getSelectedItem().toString());
-           pst.setString(6, cboEventCategoria.getSelectedItem().toString());
-           pst.setString(7, txtEventDescricao.getText());
-        
-           if((txtEventDescricao.getText().isEmpty()) || (txtEventHorario.getText().isEmpty())){
-               JOptionPane.showMessageDialog(null,"Preencha todos os campos obrigatorios");
-           } else{
-            int adicionado = pst.executeUpdate();
-            if(adicionado > 0){
-                JOptionPane.showMessageDialog(null,"Evento alterado com sucesso");
-                 limpar();
-            }
-           }
-        } catch (Exception e) {
-         JOptionPane.showMessageDialog(null,e);
-        }   
-       }
-        
+
+        btnAdicionar.setEnabled(false);
+        btnAlterar.setEnabled(true);
+        btnRemover.setEnabled(true);
     }
 
-    private void remover(){
-        int confirma = JOptionPane.showConfirmDialog(null, "tem certeza que deseja remover este evento ?", "Atenção",JOptionPane.YES_NO_OPTION);
-        if (confirma == JOptionPane.YES_OPTION){
+    private void alterar() {
+        int confirma = JOptionPane.showConfirmDialog(null, "Confirma as alterações nos dados deste evento ?", "Atenção!", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
+            String sql = "update tbeventos set descricao=?,dataevento=?,horario=?,localevento=?,validado=?,categoria=? where descricao=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtEventDescricao.getText());
+                pst.setString(2, txtEventData.getText());
+                pst.setString(3, txtEventHorario.getText());
+                pst.setString(4, txtEventLocal.getText());
+                pst.setString(5, cboEventValidado.getSelectedItem().toString());
+                pst.setString(6, cboEventCategoria.getSelectedItem().toString());
+                pst.setString(7, txtEventDescricao.getText());
+
+                if ((txtEventDescricao.getText().isEmpty()) || (txtEventHorario.getText().isEmpty())) {
+                    JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatorios");
+                } else {
+                    int adicionado = pst.executeUpdate();
+                    if (adicionado > 0) {
+                        JOptionPane.showMessageDialog(null, "Evento alterado com sucesso");
+                        limpar();
+                    }
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+
+    }
+
+    private void remover() {
+        int confirma = JOptionPane.showConfirmDialog(null, "tem certeza que deseja remover este evento ?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (confirma == JOptionPane.YES_OPTION) {
             String sql = "delete from tbeventos where descricao=?";
-            try{
-            pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtEventDescricao.getText());
-           int apagado = pst.executeUpdate();
-           if(apagado > 0){
-               limpar();
-               JOptionPane.showMessageDialog(null, "Evento Removido com sucesso");
-               
-               btnAdicionar.setEnabled(true);
-           }
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(null,e);
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtEventDescricao.getText());
+                int apagado = pst.executeUpdate();
+                if (apagado > 0) {
+                    limpar();
+                    JOptionPane.showMessageDialog(null, "Evento Removido com sucesso");
+
+                    btnAdicionar.setEnabled(true);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
             }
         }
     }
-    
-    private void limpar(){
+
+    private void limpar() {
         txtEventPesquisar.setText(null);
         txtEventDescricao.setText(null);
-                  txtEventId.setText(null);
-                txtEventHorario.setText(null);
-                txtEventLocal.setText(null);
-                txtEventData.setText(null);
-                ((DefaultTableModel) tblEventos.getModel()).setRowCount(0);
+        txtEventId.setText(null);
+        txtEventHorario.setText(null);
+        txtEventLocal.setText(null);
+        txtEventData.setText(null);
+        ((DefaultTableModel) tblEventos.getModel()).setRowCount(0);
+        btnAdicionar.setEnabled(true);
+        btnRemover.setEnabled(false);
+        btnAlterar.setEnabled(false);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -188,13 +192,13 @@ btnRemover.setEnabled(true);
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 100, -1, -1));
 
         jLabel2.setText("Data:");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 180, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 270, -1, -1));
 
         txtEventDescricao.setColumns(20);
         txtEventDescricao.setRows(5);
         jScrollPane1.setViewportView(txtEventDescricao);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 100, 446, 44));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 100, 446, 150));
 
         txtEventId.setEnabled(false);
         txtEventId.addActionListener(new java.awt.event.ActionListener() {
@@ -205,15 +209,15 @@ btnRemover.setEnabled(true);
         getContentPane().add(txtEventId, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 60, 122, 20));
 
         jLabel3.setText("Horario:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 240, -1, -1));
-        getContentPane().add(txtEventHorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 240, 127, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 320, -1, -1));
+        getContentPane().add(txtEventHorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 320, 170, -1));
 
         jLabel4.setText("Local:");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 300, -1, -1));
-        getContentPane().add(txtEventLocal, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 300, 127, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 360, -1, -1));
+        getContentPane().add(txtEventLocal, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 360, 170, -1));
 
         jLabel5.setText("Validado");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 180, -1, -1));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 270, -1, -1));
 
         cboEventValidado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Em Obsevação", "Aprovado", "Recusado" }));
         cboEventValidado.addActionListener(new java.awt.event.ActionListener() {
@@ -221,40 +225,46 @@ btnRemover.setEnabled(true);
                 cboEventValidadoActionPerformed(evt);
             }
         });
-        getContentPane().add(cboEventValidado, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 180, -1, -1));
+        getContentPane().add(cboEventValidado, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 270, 160, -1));
 
         jLabel6.setText("Categoria");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 240, -1, -1));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 360, -1, -1));
 
         cboEventCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Outros", "Alimentação", "Transporte", "Moradia", "Educação", "Lazer", "Compras" }));
-        getContentPane().add(cboEventCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 240, -1, -1));
+        getContentPane().add(cboEventCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 360, 160, -1));
 
-        btnAdicionar.setText("Adicionar");
+        btnAdicionar.setBackground(new java.awt.Color(78, 92, 188));
+        btnAdicionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/add.png"))); // NOI18N
         btnAdicionar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdicionarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAdicionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 420, -1, -1));
+        getContentPane().add(btnAdicionar, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 420, -1, -1));
 
-        btnAlterar.setText("Alterar");
+        btnAlterar.setBackground(new java.awt.Color(78, 92, 188));
+        btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/editar.png"))); // NOI18N
+        btnAlterar.setToolTipText("");
+        btnAlterar.setEnabled(false);
         btnAlterar.setPreferredSize(new java.awt.Dimension(80, 80));
         btnAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAlterarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAlterar, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 420, -1, -1));
+        getContentPane().add(btnAlterar, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 420, -1, -1));
 
-        btnRemover.setText("Remover");
+        btnRemover.setBackground(new java.awt.Color(78, 92, 188));
+        btnRemover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/trash.png"))); // NOI18N
+        btnRemover.setEnabled(false);
         btnRemover.setPreferredSize(new java.awt.Dimension(80, 80));
         btnRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoverActionPerformed(evt);
             }
         });
-        getContentPane().add(btnRemover, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 420, -1, -1));
+        getContentPane().add(btnRemover, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 420, -1, -1));
 
         txtEventPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -299,7 +309,7 @@ btnRemover.setEnabled(true);
                 txtEventDataActionPerformed(evt);
             }
         });
-        getContentPane().add(txtEventData, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 180, 122, -1));
+        getContentPane().add(txtEventData, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 270, 170, -1));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel12.setText("*Campo Obrigatorio");
@@ -313,7 +323,7 @@ btnRemover.setEnabled(true);
     }//GEN-LAST:event_cboEventValidadoActionPerformed
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-adicionar();
+        adicionar();
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAdicionarActionPerformed
 

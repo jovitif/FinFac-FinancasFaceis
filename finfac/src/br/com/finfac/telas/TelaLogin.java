@@ -3,69 +3,67 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package br.com.finfac.telas;
+
 import java.sql.*;
 import br.com.finfac.dao.ModuloConexao;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 
 public class TelaLogin extends javax.swing.JFrame {
-    
 
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
-    
-    public void logar(){
+
+    public void logar() {
         String sql = "select * from tbusuarios where login=? and senha=?";
-        try{
+        try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtUsuario.getText());
             String captura = new String(txtSenha.getPassword());
             pst.setString(2, captura);
             rs = pst.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 String perfil = rs.getString(10);
                 System.out.println(perfil);
-                if(perfil.equals("admin")){
-           
-                TelaPrincipal principal = new TelaPrincipal();
-                principal.setVisible(true);
-                TelaPrincipal.MenRel.setEnabled(true);
-          
-              //  TelaEvento.cboEventValidado.setVisible(true);
-                TelaPrincipal.menCadFamiliares.setEnabled(true);
-                TelaPrincipal.lblUsuario.setText(rs.getString(2));
-                TelaPrincipal.lblUsuario.setForeground(Color.red);
-                
-                this.dispose();
-                }else{
-                TelaPrincipal principal = new TelaPrincipal();
-                principal.setVisible(true);
-                
-                TelaPrincipal.lblUsuario.setText(rs.getString(2));
-              // TelaEvento.cboEventValidado.setVisible(false);
-                this.dispose();
+                if (perfil.equals("admin")) {
+
+                    TelaPrincipal principal = new TelaPrincipal("admin");
+                    principal.setVisible(true);
+
+                    TelaPrincipal.menCadFamiliares.setEnabled(true);
+                    TelaPrincipal.lblUsuario2.setText(rs.getString(2));
+                    TelaPrincipal.lblUsuario2.setForeground(new Color(78, 92, 188));
+
+                    this.dispose();
+                } else {
+                    TelaPrincipal principal = new TelaPrincipal("user");
+                    principal.setVisible(true);
+
+                    TelaPrincipal.lblUsuario2.setText(rs.getString(2));
+                    //TelaEvento.cboEventValidado.setVisible(false);
+                    this.dispose();
                 }
                 //conexao.close();
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Usuario e/ou senha invalido");
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.print(e);
-            JOptionPane.showMessageDialog(null,e);
-        }       
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
-    
+
     public TelaLogin() {
         getContentPane().setBackground(Color.WHITE);
         initComponents();
         conexao = ModuloConexao.conectar();
         System.out.println(conexao);
-         if (conexao != null) {
-                lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/dbok.png")));
-            } else {
-                lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/dberror.png")));
-            }
+        if (conexao != null) {
+            lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/dbok.png")));
+        } else {
+            lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/dberror.png")));
+        }
     }
 
     /**
@@ -94,42 +92,44 @@ public class TelaLogin extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Usuario");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Senha");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 190, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 190, -1, -1));
 
         txtUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsuarioActionPerformed(evt);
             }
         });
-        getContentPane().add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 150, 240, 30));
+        getContentPane().add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 150, 240, 30));
 
-        btnLogin.setBackground(new java.awt.Color(153, 255, 153));
+        btnLogin.setBackground(new java.awt.Color(78, 92, 188));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        btnLogin.setForeground(new java.awt.Color(245, 245, 245));
+        btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/angle-small-right.png"))); // NOI18N
         btnLogin.setText("LOGIN");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
             }
         });
-        getContentPane().add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 260, 240, -1));
+        getContentPane().add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 250, 240, 40));
 
         txtSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSenhaActionPerformed(evt);
             }
         });
-        getContentPane().add(txtSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 190, 240, 30));
+        getContentPane().add(txtSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, 240, 30));
 
         lblStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/finfac/icones/dberror.png"))); // NOI18N
-        getContentPane().add(lblStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, -1, -1));
+        getContentPane().add(lblStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setText("LOGIN");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, -1, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, -1, -1));
 
         setSize(new java.awt.Dimension(679, 427));
         setLocationRelativeTo(null);

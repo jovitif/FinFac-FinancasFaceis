@@ -8,7 +8,7 @@ import java.awt.Color;
 
 /**
  *
- * @author Usuário
+ * @author João Sales
  */
 public class TelaSobre extends javax.swing.JFrame {
 
