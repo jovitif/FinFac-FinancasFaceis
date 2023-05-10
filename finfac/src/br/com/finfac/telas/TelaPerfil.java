@@ -64,7 +64,14 @@ public class TelaPerfil extends javax.swing.JInternalFrame {
         cboSituacao.setSelectedItem(tblGastos.getValueAt(setar, 3));
         txtData.setText(tblGastos.getModel().getValueAt(setar, 5).toString());
         txtHorario.setText(tblGastos.getModel().getValueAt(setar, 6).toString());
-
+        
+        txtValor.setEnabled(true);
+        txtDescricao.setEnabled(true);
+        cboMeio.setEnabled(true);
+        cboSituacao.setEnabled(true);
+        txtData.setEnabled(true);
+        txtHorario.setEnabled(true);
+        
         btnEditar.setEnabled(true);
         btnDeletar.setEnabled(true);
     }
@@ -214,6 +221,7 @@ public class TelaPerfil extends javax.swing.JInternalFrame {
         getContentPane().add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 430, -1, -1));
 
         cboMeio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "Dinheiro", "Cartão de crédito", "Cartão de débito", "Transferência bancária", "Boleto bancário", "Cheque", "Pix", "PayPal", "PicPay", "Mercado Pago", "Outro " }));
+        cboMeio.setEnabled(false);
         cboMeio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboMeioActionPerformed(evt);
@@ -222,9 +230,11 @@ public class TelaPerfil extends javax.swing.JInternalFrame {
         getContentPane().add(cboMeio, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 330, -1, -1));
 
         txtValor.setText("0.0");
+        txtValor.setEnabled(false);
         getContentPane().add(txtValor, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 280, 100, -1));
 
         cboSituacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Em observação", "Aprovado", "Recusado" }));
+        cboSituacao.setEnabled(false);
         cboSituacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboSituacaoActionPerformed(evt);
@@ -234,10 +244,15 @@ public class TelaPerfil extends javax.swing.JInternalFrame {
 
         txtDescricao.setColumns(20);
         txtDescricao.setRows(5);
+        txtDescricao.setEnabled(false);
         jScrollPane3.setViewportView(txtDescricao);
 
         getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 310, 430, -1));
+
+        txtData.setEnabled(false);
         getContentPane().add(txtData, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 280, 110, -1));
+
+        txtHorario.setEnabled(false);
         getContentPane().add(txtHorario, new org.netbeans.lib.awtextra.AbsoluteConstraints(904, 370, 120, -1));
 
         jLabel8.setText("Situação");
