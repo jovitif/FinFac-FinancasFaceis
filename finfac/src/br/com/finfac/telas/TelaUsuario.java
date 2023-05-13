@@ -35,7 +35,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         String sql = "select * from tbusuarios where nome = ?";
         try {
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtUsuPesquisar.getText());
+            pst.setString(1, txtUsuPesquisar1.getText());
             rs = pst.executeQuery();
             if (rs.next()) {
                 txtUsuNome.setText(rs.getString(2));
@@ -109,11 +109,11 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnUsuUpdate.setEnabled(false);
     }
 
-    private void pesquisar_usuario() {
+       private void pesquisar_usuario() {
         String sql = "SELECT *  FROM tbusuarios WHERE nome LIKE ?";
         try {
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, "%" + txtUsuPesquisar.getText() + "%");
+            pst.setString(1, "%" + txtUsuPesquisar1.getText() + "%");
             rs = pst.executeQuery();
             tblUsuarios.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (Exception e) {
@@ -137,6 +137,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         btnUsuUpdate.setEnabled(true);
         btnUsuDelete.setEnabled(true);
     }
+
 
     private void alterar() {
         int confirma = JOptionPane.showConfirmDialog(null, "Confirmar as alterações nos dados deste cleinte ?", "Atenção!", JOptionPane.YES_NO_OPTION);
@@ -169,6 +170,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         }
     }
 
+
     private void remover() {
         int confirma = JOptionPane.showConfirmDialog(null, "tem certeza que deseja remover este familiar", "Atenção", JOptionPane.YES_NO_OPTION);
         if (confirma == JOptionPane.YES_OPTION) {
@@ -196,7 +198,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -206,7 +207,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        txtUsuPesquisar = new javax.swing.JTextField();
         txtUsuNome = new javax.swing.JTextField();
         txtUsuEmail = new javax.swing.JTextField();
         txtUsuCpf = new javax.swing.JTextField();
@@ -222,6 +222,8 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         jLabel12 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuarios = new javax.swing.JTable();
+        jLabel10 = new javax.swing.JLabel();
+        txtUsuPesquisar1 = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -229,9 +231,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         setTitle("Familiares");
         setPreferredSize(new java.awt.Dimension(973, 514));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setText("Pesquisar");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 21, -1, -1));
 
         jLabel2.setText("*Nome");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(491, 64, -1, -1));
@@ -259,18 +258,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         jLabel11.setText("*Perfil");
         getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 280, -1, -1));
-
-        txtUsuPesquisar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuPesquisarActionPerformed(evt);
-            }
-        });
-        txtUsuPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtUsuPesquisarKeyReleased(evt);
-            }
-        });
-        getContentPane().add(txtUsuPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 18, 187, -1));
 
         txtUsuNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -378,12 +365,23 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 58, -1, -1));
 
+        jLabel10.setText("Pesquisar");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 21, -1, 20));
+
+        txtUsuPesquisar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsuPesquisar1ActionPerformed(evt);
+            }
+        });
+        txtUsuPesquisar1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUsuPesquisar1KeyReleased(evt);
+            }
+        });
+        getContentPane().add(txtUsuPesquisar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 18, 187, -1));
+
         setBounds(0, 0, 1074, 560);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtUsuPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuPesquisarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUsuPesquisarActionPerformed
 
     private void txtUsuNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuNomeActionPerformed
         // TODO add your handling code here:
@@ -425,13 +423,18 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
 // TODO add your handling code here:
     }//GEN-LAST:event_btnUsuDeleteActionPerformed
 
-    private void txtUsuPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuPesquisarKeyReleased
-        pesquisar_usuario();
-    }//GEN-LAST:event_txtUsuPesquisarKeyReleased
-
     private void tblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseClicked
         setarCampos();
     }//GEN-LAST:event_tblUsuariosMouseClicked
+
+    private void txtUsuPesquisar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuPesquisar1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsuPesquisar1ActionPerformed
+
+    private void txtUsuPesquisar1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuPesquisar1KeyReleased
+        // TODO add your handling code here:
+        pesquisar_usuario();
+    }//GEN-LAST:event_txtUsuPesquisar1KeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -440,7 +443,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnUsuUpdate;
     private javax.swing.JComboBox<String> cboUsuParentesco;
     private javax.swing.JComboBox<String> cboUsuPerfil;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
@@ -459,7 +462,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtUsuFone;
     private javax.swing.JTextField txtUsuLogin;
     private javax.swing.JTextField txtUsuNome;
-    private javax.swing.JTextField txtUsuPesquisar;
+    private javax.swing.JTextField txtUsuPesquisar1;
     private javax.swing.JPasswordField txtUsuSenha;
     // End of variables declaration//GEN-END:variables
 }

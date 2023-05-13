@@ -25,7 +25,6 @@ java 11.0.17 2022-10-18 LTS
 Java(TM) SE Runtime Environment 18.9 (build 11.0.17+10-LTS-269)
 Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.17+10-LTS-269, mixed mode)
 ```
-- [Eclipse](https://www.eclipse.org/downloads/)
-- [JavaFx](https://openjfx.io/)
-- [Scene Builder](https://gluonhq.com/products/scene-builder/)
+- [Netbeans](https://www.eclipse.org/downloads/)
+- [Java Swing](https://openjfx.io/)
 - [MySQL](https://www.mysql.com/)
